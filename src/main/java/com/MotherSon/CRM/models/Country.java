@@ -78,7 +78,17 @@ public class Country {
 	@Column(name = "cimages")
 	private List<String> cimage;
 
-	
+		
+	 @Column(name="p_code", nullable = false, unique = true)
+	 private String pCode;
+
+	public String getpCode() {
+		return pCode;
+	}
+
+	public void setpCode(String pCode) {
+		this.pCode = pCode;
+	}
 
 	public List<String> getCimage() {
 		return cimage;
