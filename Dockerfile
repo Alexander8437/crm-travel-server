@@ -3,6 +3,6 @@ COPY . .
 RUN mvn clean package -DskipTests
 
 FROM openjdk:17.0.1-jdk-slim
-COPY --from=build /target/CRM-0.0.1-SNAPSHOT.jar CRM.jar
+COPY --from=build /target/CRMTravel-0.0.1-SNAPSHOT.jar CRMTravel.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar","CRM.jar"]
+ENTRYPOINT ["java", "-jar","CRMTravel.jar"]
