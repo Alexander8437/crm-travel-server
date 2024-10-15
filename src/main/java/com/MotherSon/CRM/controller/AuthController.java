@@ -1,10 +1,14 @@
 package com.MotherSon.CRM.controller;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +23,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,6 +37,7 @@ import com.MotherSon.CRM.payload.request.LoginRequest;
 import com.MotherSon.CRM.payload.request.SignupRequest;
 import com.MotherSon.CRM.payload.response.JwtResponse;
 import com.MotherSon.CRM.payload.response.MessageResponse;
+import com.MotherSon.CRM.payload.response.UserResponse;
 import com.MotherSon.CRM.repository.RoleRepository;
 import com.MotherSon.CRM.repository.UserRepository;
 import com.MotherSon.CRM.security.jwt.JwtUtils;
@@ -42,6 +48,7 @@ import com.MotherSon.CRM.security.services.UserService;
 @RestController
 @RequestMapping("Motherson/crm/v1")
 public class AuthController {
+	
 	@Autowired
 	AuthenticationManager authenticationManager;
 
@@ -56,6 +63,7 @@ public class AuthController {
 
 	@Autowired
 	JwtUtils jwtUtils;
+	
 	@Autowired
 	private UserService userservice;
 	
@@ -144,4 +152,81 @@ public class AuthController {
 
 		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
 	}
+	
+	
+	@GetMapping("/getAllUser")
+    public ResponseEntity<?> getAllUserInfo() {
+		
+        List<User> listUser = userRepository.findAll();
+
+        // Get JWT Token from the Authorization header
+//        String token = jwtUtils.getJwtFromRequest(request);
+//        
+//        // Validate token and extract username
+//        if (token != null && jwtUtils.validateJwtToken(token)) {
+//            String username = jwtUtils.getUserNameFromJwtToken(token);
+//
+//            // Fetch user by username
+//            
+//            User user = userRepository.findByUsername(username)
+//                    .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+//
+//            // Map user details to DTO (or return directly, depending on your design)
+//            UserResponse userResponse = new UserResponse(
+//                user.getId(),
+//                user.getUsername(),
+//                user.getEmail(),
+//                user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList())
+//            );
+//
+            return ResponseEntity.ok(listUser);
+//        } else {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Invalid token", 401, HttpStatus.UNAUTHORIZED));
+//        }
+    }
+	
+	@GetMapping("/getAllUser/{id}")
+    public ResponseEntity<?> getUserInfo(@PathVariable Long id) {
+        Optional<User> user = userRepository.findById(id);
+        return ResponseEntity.ok(user);
+        }
+	
+	@GetMapping("/getbytoken")
+    public ResponseEntity<?> getUserInfo(HttpServletRequest request) {
+
+        // Get JWT Token from the Authorization header
+        String token = jwtUtils.getJwtFromRequest(request);
+        
+        // Validate token and extract username
+        if (token != null && jwtUtils.validateJwtToken(token)) {
+            String username = jwtUtils.getUserNameFromJwtToken(token);
+
+            // Fetch user by username
+            User user = userRepository.findByUsername(username)
+                    .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
+
+            // Map user details to DTO (or return directly, depending on your design)
+            UserResponse userResponse = new UserResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList())
+            );
+
+            return ResponseEntity.ok(userResponse);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse("Invalid token"));
+        }
+    }
+	
+	@GetMapping("/ipAddress")
+    public String getIpAddress() {
+        try {
+            InetAddress ip = InetAddress.getLocalHost();
+            return ip.getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+            return "Unable to fetch IP Address";
+        }
+    }
 }

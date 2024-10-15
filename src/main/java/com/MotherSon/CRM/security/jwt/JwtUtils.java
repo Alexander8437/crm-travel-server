@@ -2,11 +2,14 @@ package com.MotherSon.CRM.security.jwt;
 
 import java.util.Date;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.MotherSon.CRM.security.services.UserDetailsImpl;
 
@@ -59,4 +62,13 @@ public class JwtUtils {
 
     return false;
   }
+  
+  public String getJwtFromRequest(HttpServletRequest request) {
+		// TODO Auto-generated method stub
+		 String bearerToken = request.getHeader("Authorization");
+		    if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
+		        return bearerToken.substring(7);
+		    }
+		    return null;
+	}
 }

@@ -54,6 +54,7 @@ public class Country {
 //	@Pattern(regexp = "^[A-Z]{2}$", message = "Country code must consist of to uppercase letters")
 	@Column(name = "ccode", nullable = false, unique = true)
 	private String code;
+	
 
 	@NotBlank(message = "Ip address is reqired")
 	// @Pattern(regexp = "^([0-9]{1,3}\\.){3}[0-9]{1,3}$", message = "Invalid IP
@@ -79,6 +80,16 @@ public class Country {
 	private List<String> cimage;
 
 	
+	 @Column(name="p_code", nullable = false, unique = true)
+	 private String pCode;
+
+	public String getpCode() {
+		return pCode;
+	}
+
+	public void setpCode(String pCode) {
+		this.pCode = pCode;
+	}
 
 	public List<String> getCimage() {
 		return cimage;
