@@ -79,7 +79,11 @@ public class Country {
 	@Column(name = "cimages")
 	private List<String> cimage;
 
+<<<<<<< HEAD
 	
+=======
+		
+>>>>>>> 93bcec4e4b6a12dff2c85806ebbb49e1a1ba8105
 	 @Column(name="p_code", nullable = false, unique = true)
 	 private String pCode;
 
