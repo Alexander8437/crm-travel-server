@@ -26,7 +26,7 @@ public class GSTController {
 	  }
 
 	  @GetMapping("/mod")
-	  @PreAuthorize("hasRole('ROLE_USER')")
+	  @PreAuthorize("hasRole('Super Admin')")
 	  public String moderatorAccess() {
 	    return "Moderator Board.";
 	  }
