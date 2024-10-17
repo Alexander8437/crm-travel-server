@@ -2,22 +2,50 @@ package com.MotherSon.CRM.controller;
 
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.MotherSon.CRM.payload.response.MessageResponse;
+import com.MotherSon.CRM.payload.response.UtilMethod;
+import com.MotherSon.CRM.security.services.RoleService;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequestMapping("Motherson/crm/v1")
 public class GSTController {
+	
+	@Autowired
+	private RoleService genericService;
 
 
-	@GetMapping("/all")
+	@GetMapping("/getAll")
 	  public String allAccess() {
 	    return "Public Content.";
 	  }
+	
+	@PostMapping("/all")
+	public ResponseEntity<MessageResponse> allAccess(@RequestBody String generic) {
+		try {
+			genericService.saveGeneric(generic);
+			return ResponseEntity.ok(new MessageResponse("Successfully inserted"));
+			
+		}catch(DataIntegrityViolationException e) {
+			
+			return new ResponseEntity<>(new MessageResponse(UtilMethod.extractDetailMessage(e.getMostSpecificCause().getMessage())),HttpStatus.CONFLICT);
+		}catch(Exception e) {
+			 
+			return new ResponseEntity<>(new MessageResponse(e.getMessage()),HttpStatus.CONFLICT);
+		}
+	}
 
 	  @GetMapping("/user")
 	  @PreAuthorize("hasRole('ROLE_ADMIN')")
@@ -26,7 +54,7 @@ public class GSTController {
 	  }
 
 	  @GetMapping("/mod")
-	  @PreAuthorize("hasRole('ROLE_USER')")
+	  @PreAuthorize("hasRole('Super Admin')")
 	  public String moderatorAccess() {
 	    return "Moderator Board.";
 	  }

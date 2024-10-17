@@ -104,12 +104,11 @@ public class Controller {
 		String imageUrl = "/image/" +  uniqueFilename;;
 		imageUrls.add(imageUrl);
 			}
-			
 		country.setCimage(imageUrls);
  
 		return this.countryService.addCountry(country);
 		}
- 
+
 		//private String generateUniqueFilename(String uploadDate, String originalFilename) {
 				// TODO Auto-generated method stub
 				//return null;
