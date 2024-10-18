@@ -1,7 +1,7 @@
 package com.MotherSon.CRM.repository;
 import org.springframework.stereotype.Repository;
 
-import com.MotherSon.CRM.rolepermission.RolePermissionActions;
+import com.MotherSon.CRM.models.RolePermissionActions;
 
 import org.springframework.data.jpa.repository.JpaRepository;
  

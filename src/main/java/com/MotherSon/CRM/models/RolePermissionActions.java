@@ -1,8 +1,7 @@
-package com.MotherSon.CRM.rolepermission;
+package com.MotherSon.CRM.models;
 
 import javax.persistence.*;
 
-import com.MotherSon.CRM.models.RolePermission;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity

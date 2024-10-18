@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.MotherSon.CRM.models.Role;
 import com.MotherSon.CRM.models.RolePermission;
+import com.MotherSon.CRM.models.RolePermissionActions;
 import com.MotherSon.CRM.repository.RolePermissionsActionsRepository;
 import com.MotherSon.CRM.repository.RolePermissionsRepository;
 import com.MotherSon.CRM.repository.RoleRepository;
-import com.MotherSon.CRM.rolepermission.RolePermissionActions;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 //import com.ms.jwt.models.Role;
@@ -42,9 +42,13 @@ public class RoleService {
     	JsonNode rootNode = objectMapper.readTree(generic);
         String roleName = rootNode.get("name").asText();
 
+        String roleDes = rootNode.get("description").asText();
+
         // Create Role
         Role role = new Role();
-        //role.setName(roleName);
+        role.setName(roleName);
+        
+        role.setDescription(roleDes);
 
         // Iterate over permissions
         JsonNode permissionsNode = rootNode.get("permissions");
